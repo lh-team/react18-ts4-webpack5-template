@@ -5,28 +5,26 @@ import TileLayer from 'ol/layer/Tile'
 import { XYZ } from 'ol/source'
 import { defaults as defaultControls } from 'ol/control'
 import { useEffect, useRef } from 'react'
-import mapUrls from './mapUrls'
-import scssStyles from './index.scss'
+import mapUrls from '@/components/MapIndex/mapUrls'
 
-const MapIndex: React.FC = () => {
+export const useMap = () => {
+  const vecLayer = new TileLayer({
+    source: new XYZ({
+      url: mapUrls['tian-vec']
+    })
+  })
+  const imgLayer = new TileLayer({
+    source: new XYZ({
+      url: mapUrls['tian-img']
+    })
+  })
+  const labelLayer = new TileLayer({
+    source: new XYZ({
+      url: mapUrls['tian-roadLabel']
+    })
+  })
   const mapRef = useRef<HTMLDivElement>(null) as any
   useEffect(() => {
-    const vecLayer = new TileLayer({
-      source: new XYZ({
-        url: mapUrls['tian-vec']
-      })
-    })
-    const imgLayer = new TileLayer({
-      source: new XYZ({
-        url: mapUrls['tian-img']
-      })
-    })
-
-    const labelLayer = new TileLayer({
-      source: new XYZ({
-        url: mapUrls['tian-roadLabel']
-      })
-    })
     const map: any = new Map({
       target: mapRef.current,
       layers: [vecLayer, imgLayer, labelLayer],
@@ -47,10 +45,5 @@ const MapIndex: React.FC = () => {
       map.setTarget(null)
     }
   }, [])
-  return (
-    <div ref={mapRef} className={scssStyles.mapBox}>
-      {/* <Button>切换底图</Button> */}
-    </div>
-  )
+  return [mapRef]
 }
-export default MapIndex
